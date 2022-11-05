@@ -16,60 +16,64 @@
 		<div class="container">
 			<h1>慢性病連續處方箋給藥日期計算</h1>
 			<div onchange="prescription()">
-				<div class="row">
-					<label class="col" for="startDate">處方箋看診日期(就醫日期)</label>
-					<input class="col" type="date" id="startDate" />
+				<div id="form">
+					<div id="start" class="row alert alert-primary">
+						<label class="col" for="startDate">處方箋看診日期(就醫日期)</label>
+						<input class="col" type="date" id="startDate" />
+					</div>
+					<div id="dispenseInterval" class="row alert alert-primary">
+						<label class="col" for="interval">給藥天數</label>
+						<select class="col" name="interval" id="interval">
+							<option value="21">21</option>
+							<option value="28" selected>28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+						</select>
+					</div>
+					<div id="dispenseNumber" class="row alert alert-primary">
+						<label class="col" for="dispenseNum">可調劑次數</label>
+						<select class="col" name="dispenseNum" id="dispenseNum">
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
+					</div>
+					<div id="current" class="row alert alert-primary">
+						<label class="col" for="currentDate">本次領藥日期</label>
+						<input class="col" type="date" id="currentDate" />
+					</div>
+					<div id="revisit" class="row alert alert-primary">
+						<label class="col" for="revisitDate">預約回診日期</label>
+						<input class="col" type="date" id="revisitDate" />
+					</div>
 				</div>
-				<div class="row">
-					<label class="col" for="interval">給藥天數</label>
-					<select class="col" name="interval" id="interval">
-						<option value="21">21</option>
-						<option value="28" selected>28</option>
-						<option value="29">29</option>
-						<option value="30">30</option>
-					</select>
-				</div>
-				<div class="row">
-					<label class="col" for="dispenseNum">可調劑次數</label>
-					<select class="col" name="dispenseNum" id="dispenseNum">
-						<option value="2">2</option>
-						<option value="3">3</option>
-					</select>
-				</div>
-				<div class="row">
-					<label class="col" for="currentDate">本次領藥日期</label>
-					<input class="col" type="date" id="currentDate" />
-				</div>
-				<div class="row">
-					<label class="col" for="revisitDate">預約回診日期</label>
-					<input class="col" type="date" id="revisitDate" />
-				</div>
-				<div class="row">
-					<div class="col" id="first">第一次領藥日期</div>
-					<span class="col" id="firstRange"></span>
-				</div>
-				<div class="row">
-					<div class="col" id="second">第二次領藥日期</div>
-					<span class="col" id="secondRange"></span>
-				</div>
-				<div class="row" id="thirdContainer">
-					<div class="col" id="third">第三次領藥日期</div>
-					<span class="col" id="thirdRange"></span>
-				</div>
-				<div class="row">
-					<div class="col">處方箋到期日(不可領藥)</div>
-					<span class="col" id="expireDate"></span>
-				</div>
-				<div class="row">
-					<div class="col">重算下次可領藥日</div>
-					<span class="col" id="modifiedRange"></span>
-				</div>
-				<div class="row" id="modifiedRevisitContainer">
-					<div class="col">需重新約診</div>
-					<span class="col" id="modifiedRevisit"></span>
+				<div id="info">
+					<div id="first" class="row alert alert-secondary">
+						<div class="col">第一次領藥日期</div>
+						<span class="col" id="firstRange"></span>
+					</div>
+					<div id="second" class="row alert alert-secondary">
+						<div class="col">第二次領藥日期</div>
+						<span class="col" id="secondRange"></span>
+					</div>
+					<div id="third" class="row alert alert-secondary">
+						<div class="col">第三次領藥日期</div>
+						<span class="col" id="thirdRange"></span>
+					</div>
+					<div id="expire" class="row alert alert-danger">
+						<div class="col">處方箋到期日(不可領藥)</div>
+						<span class="col" id="expireDate"></span>
+					</div>
+					<div id="modifiedRangeContainer" class="row alert alert-warning">
+						<div class="col">重算下次可領藥日</div>
+						<span class="col" id="modifiedRange"></span>
+					</div>
+					<div id="modifiedRevisitContainer" class="row alert alert-warning">
+						<div class="col">需重新約診</div>
+						<span class="col" id="modifiedRevisit"></span>
+					</div>
 				</div>
 			</div>
-			<div class="alert alert-info" id="law">
+			<div class="row alert alert-info" id="law">
 				<p>
 					<a
 						href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=L0060009&flno=24"
