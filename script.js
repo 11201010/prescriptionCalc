@@ -5,7 +5,7 @@ let currentDate = document.getElementById("currentDate");
 let revisitDate = document.getElementById("revisitDate");
 let firstRange = document.getElementById("firstRange");
 let secondRange = document.getElementById("secondRange");
-let third = document.getElementById("third");
+let thirdContainer = document.getElementById("thirdContainer");
 let thirdRange = document.getElementById("thirdRange");
 let expireDate = document.getElementById("expireDate");
 let modifiedRange = document.getElementById("modifiedRange");
@@ -31,7 +31,7 @@ function prescription() {
 		moment(startDate.value)
 			.add(interval.value - 1, "d")
 			.format("YYYY-MM-DD");
-	third.style.display = dispenseNum.value == 2 ? "none" : "block";
+	thirdContainer.style.display = dispenseNum.value == 2 ? "none" : "flex";
 	thirdRange.innerHTML =
 		moment(startDate.value)
 			.add(interval.value * 2 - 10, "d")
