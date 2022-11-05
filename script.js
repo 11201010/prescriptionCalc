@@ -14,7 +14,9 @@ let modifiedRevisitContainer = document.getElementById(
 	"modifiedRevisitContainer"
 );
 
+startDate.value = "";
 currentDate.valueAsDate = new Date();
+revisitDate.value = "";
 
 function prescription() {
 	firstRange.innerHTML =
@@ -74,7 +76,8 @@ function prescription() {
 				moment(startDate.value).add(interval.value * 2 - 1, "d")
 			);
 		}
-		console.log(revisitDate.value == "");
+		modifiedRevisitContainer.style.display =
+			revisitDate.value == "" ? "none" : "flex";
 		modifiedRange.innerHTML =
 			suggestStart.format("YYYY-MM-DD") +
 			" ~ " +
