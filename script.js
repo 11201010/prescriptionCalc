@@ -81,7 +81,7 @@ function prescription() {
 			suggestEnd.format("YYYY-MM-DD");
 		modifiedRevisit.innerHTML =
 			revisitDate.value < suggestStart.format("YYYY-MM-DD")
-				? "約診日期至少須為" + suggestStart.format("YYYY-MM-DD") + "以後"
+				? "預約回診日期至少須在" + suggestStart.format("YYYY-MM-DD") + "以後"
 				: "否";
 	}
 }
