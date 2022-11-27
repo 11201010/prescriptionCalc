@@ -105,6 +105,7 @@ function prescription() {
 	thirdCanEarly.innerHTML =
 		"第三次領藥日期至少須在" + startDate(secondDate, 2) + "(含)以後";
 	// check newRevisit
+	newRevisitContainer.style.display = revisitDate.value == "" ? "none" : "flex";
 	let newRevisitDateAfterNext = moment(secondDate.value)
 		.add((interval.value - 10) * 2, "d")
 		.format("YYYY-MM-DD");
