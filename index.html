@@ -10,68 +10,86 @@
 			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
 		/>
 		<link rel="stylesheet" href="style.css" />
+		<script
+			defer
+			src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
+		></script>
 		<script defer src="script.js"></script>
-		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 	</head>
 	<body>
 		<div class="container">
 			<h1 class="p-3">慢性病連續處方箋給藥日期計算</h1>
 			<div onchange="prescription()">
-				<div id="form">
-					<div id="start" class="row alert alert-primary">
-						<label class="col" for="startDate">處方箋看診日期(就醫日期)</label>
-						<input class="col" type="date" id="startDate" />
-					</div>
-					<div id="dispenseInterval" class="row alert alert-primary">
-						<label class="col" for="interval">給藥天數</label>
-						<select class="col" name="interval" id="interval">
-							<option value="21">21</option>
-							<option value="28" selected>28</option>
-							<option value="29">29</option>
-							<option value="30">30</option>
-						</select>
-					</div>
-					<div id="dispenseNumber" class="row alert alert-primary">
-						<label class="col" for="dispenseNum">可調劑次數</label>
-						<select class="col" name="dispenseNum" id="dispenseNum">
-							<option value="2">2</option>
-							<option value="3" selected>3</option>
-						</select>
-					</div>
-					<div id="current" class="row alert alert-primary">
-						<label class="col" for="currentDate">本次領藥日期</label>
-						<input class="col" type="date" id="currentDate" />
-					</div>
-					<div id="revisit" class="row alert alert-primary">
-						<label class="col" for="revisitDate">預約回診日期</label>
-						<input class="col" type="date" id="revisitDate" />
-					</div>
+				<div class="row alert alert-primary">
+					<label class="col" for="registerDate">處方箋看診日期(就醫日期)</label>
+					<input class="col" type="date" id="registerDate" />
 				</div>
-				<div id="info">
-					<div id="first" class="row alert alert-secondary">
-						<div class="col">第一次領藥日期</div>
-						<span class="col" id="firstRange"></span>
-					</div>
-					<div id="second" class="row alert alert-secondary">
-						<div class="col">第二次領藥日期</div>
-						<span class="col" id="secondRange"></span>
-					</div>
-					<div id="third" class="row alert alert-secondary">
-						<div class="col">第三次領藥日期</div>
-						<span class="col" id="thirdRange"></span>
-					</div>
-					<div id="expire" class="row alert alert-danger">
-						<div class="col">處方箋到期日(不可領藥)</div>
-						<span class="col" id="expireDate"></span>
-					</div>
-					<div id="modifiedRangeContainer" class="row alert alert-warning">
-						<div class="col">重算下次可領藥日</div>
-						<span class="col" id="modifiedRange"></span>
-					</div>
-					<div id="modifiedRevisitContainer" class="row alert alert-warning">
-						<div class="col">需重新約診</div>
-						<span class="col" id="modifiedRevisit"></span>
-					</div>
+				<div class="row alert alert-primary">
+					<label class="col" for="interval">給藥天數</label>
+					<select class="col" name="interval" id="interval">
+						<option value="21">21</option>
+						<option value="28" selected>28</option>
+						<option value="29">29</option>
+						<option value="30">30</option>
+					</select>
+				</div>
+				<div class="row alert alert-primary">
+					<label class="col" for="dispenseNum">可調劑次數</label>
+					<select class="col" name="dispenseNum" id="dispenseNum">
+						<option value="2">2</option>
+						<option value="3" selected>3</option>
+					</select>
+				</div>
+				<div class="row alert alert-secondary">
+					<div class="col">處方箋到期日(不可領藥)</div>
+					<span class="col" id="expireDate"></span>
+				</div>
+				<div class="row alert alert-secondary">
+					<div class="col">第一次預設領藥區間</div>
+					<span class="col" id="defaultFirstRange"></span>
+				</div>
+				<div class="row alert alert-secondary">
+					<div class="col">第二次預設領藥區間</div>
+					<span class="col" id="defaultSecondRange"></span>
+				</div>
+				<div class="row alert alert-primary">
+					<label class="col" for="secondDate">第二次實際領藥日期</label>
+					<input class="col" type="date" id="secondDate" />
+				</div>
+				<div class="row alert alert-danger" id="secondCannotEarlyContainer">
+					<span class="col" id="secondCannotEarly"></span>
+				</div>
+				<div class="third row alert alert-secondary">
+					<div class="col">第三次預設領藥區間</div>
+					<span class="col" id="defaultThirdRange"></span>
+				</div>
+				<div class="third row alert alert-warning" id="newThirdRangeContainer">
+					<div class="col">重算第三次可領藥區間</div>
+					<span class="col" id="newThirdRange"></span>
+				</div>
+				<div class="third row alert alert-primary">
+					<label class="col" for="thirdDate">第三次實際領藥日期</label>
+					<input class="col" type="date" id="thirdDate" />
+				</div>
+				<div
+					class="third row alert alert-success alert-danger"
+					id="thirdCanEarlyContainer"
+				>
+					<span class="col" id="thirdCanEarly"></span>
+				</div>
+				<div class="row alert alert-primary">
+					<label class="col" for="revisitDate">預約回診日期</label>
+					<input class="col" type="date" id="revisitDate" />
+				</div>
+				<div
+					class="row alert alert-success alert-warning"
+					id="newRevisitContainer"
+				>
+					<div class="col">需重新約診？</div>
+					<span class="col" id="newRevisit"></span>
+				</div>
+				<div class="row alert alert-danger" id="expiredContainer">
+					<span class="col">處方箋已過期，不可領藥。</span>
 				</div>
 			</div>
 			<div class="row alert alert-info" id="law">
