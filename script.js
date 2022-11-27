@@ -1,92 +1,148 @@
-let startDate = document.getElementById("startDate");
+let registerDate = document.getElementById("registerDate");
 let interval = document.getElementById("interval");
 let dispenseNum = document.getElementById("dispenseNum");
-let currentDate = document.getElementById("currentDate");
-let revisitDate = document.getElementById("revisitDate");
-let firstRange = document.getElementById("firstRange");
-let secondRange = document.getElementById("secondRange");
-let third = document.getElementById("third");
-let thirdRange = document.getElementById("thirdRange");
 let expireDate = document.getElementById("expireDate");
-let modifiedRange = document.getElementById("modifiedRange");
-let modifiedRevisit = document.getElementById("modifiedRevisit");
-let modifiedRevisitContainer = document.getElementById(
-	"modifiedRevisitContainer"
+let defaultFirstRange = document.getElementById("defaultFirstRange");
+let defaultSecondRange = document.getElementById("defaultSecondRange");
+let secondDate = document.getElementById("secondDate");
+let secondCannotEarly = document.getElementById("secondCannotEarly");
+let secondCannotEarlyContainer = document.getElementById(
+	"secondCannotEarlyContainer"
 );
+let defaultThirdRange = document.getElementById("defaultThirdRange");
+let newThirdRange = document.getElementById("newThirdRange");
+let newThirdRangeContainer = document.getElementById("newThirdRangeContainer");
+let thirdDate = document.getElementById("thirdDate");
+let thirdCanEarly = document.getElementById("thirdCanEarly");
+let thirdCanEarlyContainer = document.getElementById("thirdCanEarlyContainer");
+let revisitDate = document.getElementById("revisitDate");
+let newRevisit = document.getElementById("newRevisit");
+let newRevisitContainer = document.getElementById("newRevisitContainer");
+let expiredContainer = document.getElementById("expiredContainer");
 
 // initialization
-startDate.value = "";
-currentDate.valueAsDate = new Date();
+registerDate.value = "";
+secondDate.value = "";
+thirdDate.value = "";
 revisitDate.value = "";
 
-function prescription() {
-	firstRange.innerHTML =
-		moment(startDate.value).format("YYYY-MM-DD") +
-		" ~ " +
-		moment(startDate.value)
+// testing by setting date.defaultValue
+// 20220101, 30, 20220131
+// 20221020, 28, 20221107, 20221126
+// 20200522, 30, 20200622
+// 20200418, 28, ?, 20200622
+// 20220101, 30, 20220219
+// registerDate.defaultValue = "2022-01-01";
+// secondDate.defaultValue = "2022-01-31";
+// revisitDate.defaultValue = "2022-04-01";
+
+function startDate(date, num) {
+	if (num == 1) {
+		return moment(date.value).format("YYYY-MM-DD");
+	} else {
+		return moment(date.value)
+			.add(interval.value * (num - 1) - 10, "d")
+			.format("YYYY-MM-DD");
+	}
+}
+function endDate(date, num) {
+	if (num == 1) {
+		return moment(date.value)
 			.add(10 - 1, "d")
 			.format("YYYY-MM-DD");
-	secondRange.innerHTML =
-		moment(startDate.value)
-			.add(interval.value - 10, "d")
-			.format("YYYY-MM-DD") +
-		" ~ " +
-		moment(startDate.value)
-			.add(interval.value - 1, "d")
+	} else {
+		return moment(date.value)
+			.add(interval.value * (num - 1) - 1, "d")
 			.format("YYYY-MM-DD");
-	third.style.display = dispenseNum.value == 2 ? "none" : "flex";
-	thirdRange.innerHTML =
-		moment(startDate.value)
-			.add(interval.value * 2 - 10, "d")
-			.format("YYYY-MM-DD") +
-		" ~ " +
-		moment(startDate.value)
-			.add(interval.value * 2 - 1, "d")
-			.format("YYYY-MM-DD");
-	expireDate.innerHTML = moment(startDate.value)
+	}
+}
+
+function prescription() {
+	let thirdClass = document.querySelectorAll(".third");
+	thirdClass.forEach((container) => {
+		container.style.display = dispenseNum.value < 3 ? "none" : "flex";
+	});
+	defaultFirstRange.innerHTML =
+		startDate(registerDate, 1) + " ~ " + endDate(registerDate, 1);
+	defaultSecondRange.innerHTML =
+		startDate(registerDate, 2) + " ~ " + endDate(registerDate, 2);
+	defaultThirdRange.innerHTML =
+		startDate(registerDate, 3) + " ~ " + endDate(registerDate, 3);
+	expireDate.innerHTML = moment(registerDate.value)
 		.add(interval.value * dispenseNum.value, "d")
 		.format("YYYY-MM-DD");
-	if (
-		currentDate.valueAsDate >
-		moment(startDate.value).add(interval.value * dispenseNum.value, "d")
-	) {
-		modifiedRange.innerHTML = "不可領藥";
-	} else {
-		let modifiedEnd = moment.min(
-			// expireDate
-			moment(startDate.value).add(interval.value * dispenseNum.value, "d"),
-			// modifiedDate + interval
-			moment(currentDate.value).add(interval.value, "d")
-		);
-		let suggestStart = moment.max(
-			// thirdStart
-			moment(startDate.value).add(interval.value * 2 - 10, "d"),
-			// modifiedDate + interval - 10
-			moment(currentDate.value).add(interval.value - 10, "d")
-		);
-		let suggestEnd;
-		// if currentDate > thirdEnd
-		if (
-			currentDate.valueAsDate >
-			moment(startDate.value).add(interval.value * 2 - 1, "d")
-		) {
-			suggestEnd = modifiedEnd;
-		} else {
-			suggestEnd = moment.min(
-				modifiedEnd,
-				moment(startDate.value).add(interval.value * 2 - 1, "d")
-			);
-		}
-		modifiedRevisitContainer.style.display =
-			revisitDate.value == "" ? "none" : "flex";
-		modifiedRange.innerHTML =
-			suggestStart.format("YYYY-MM-DD") +
-			" ~ " +
-			suggestEnd.format("YYYY-MM-DD");
-		modifiedRevisit.innerHTML =
-			revisitDate.value < suggestStart.format("YYYY-MM-DD")
-				? "預約回診日期至少須在" + suggestStart.format("YYYY-MM-DD") + "以後"
+	secondCannotEarly.innerHTML =
+		"第二次領藥日期至少須在" + startDate(registerDate, 2) + "(含)以後";
+	secondCannotEarlyContainer.style.display =
+		secondDate.value >= startDate(registerDate, 2) || secondDate.value == ""
+			? "none"
+			: "flex";
+	let secondDateInInterval =
+		secondDate.value >= startDate(registerDate, 2) &&
+		secondDate.value <= endDate(registerDate, 2);
+	newThirdRange.innerHTML = secondDateInInterval
+		? "第三次領藥區間維持不變"
+		: startDate(secondDate, 2) <= endDate(registerDate, 3)
+		? startDate(secondDate, 2) + " ~ " + endDate(registerDate, 3)
+		: startDate(secondDate, 2);
+	newThirdRangeContainer.style.display =
+		secondDate.value == "" || secondDateInInterval ? "none" : "flex";
+	// newThirdRangeContainer initialization
+	newThirdRangeContainer.classList.add("alert-warning");
+	if (newThirdRange.innerHTML == defaultThirdRange.innerHTML) {
+		newThirdRangeContainer.classList.remove("alert-warning");
+		newThirdRangeContainer.classList.add("alert-success");
+		newThirdRange.innerHTML = "第三次領藥區間維持不變";
+	}
+	thirdCanEarlyContainer.style.display =
+		thirdDate.value >= startDate(registerDate, 3) || thirdDate.value == ""
+			? "none"
+			: "flex";
+	// thirdCanEarlyContainer initialization
+	thirdCanEarlyContainer.classList.add("alert-danger");
+	if (thirdDate.value >= startDate(secondDate, 2))
+		thirdCanEarlyContainer.classList.remove("alert-danger");
+	thirdCanEarly.innerHTML =
+		"第三次領藥日期至少須在" + startDate(secondDate, 2) + "(含)以後";
+	// check newRevisit
+	let newRevisitDateAfterNext = moment(secondDate.value)
+		.add((interval.value - 10) * 2, "d")
+		.format("YYYY-MM-DD");
+	if (dispenseNum.value < 3) {
+		newRevisit.innerHTML =
+			startDate(secondDate, 2) > revisitDate.value
+				? "預約回診日期至少須在" + startDate(secondDate, 2) + "以後"
 				: "否";
+	} else {
+		if (thirdDate.value == "") {
+			newRevisit.innerHTML =
+				secondDateInInterval ||
+				newThirdRange.innerHTML == "第三次領藥區間維持不變"
+					? "否"
+					: "預約回診日期至少須在" + newRevisitDateAfterNext + "以後";
+		} else {
+			newRevisit.innerHTML =
+				startDate(thirdDate, 2) > revisitDate.value
+					? "預約回診日期至少須在" + startDate(thirdDate, 2) + "以後"
+					: "否";
+		}
+	}
+	newRevisitContainer.classList.add("alert-warning");
+	if (newRevisitDateAfterNext <= revisitDate.value && thirdDate.value == "")
+		newRevisit.innerHTML = "否";
+	if (newRevisit.innerHTML == "否") {
+		newRevisitContainer.classList.remove("alert-warning");
+		newRevisitContainer.classList.add("alert-success");
+	}
+	// check expire
+	expiredContainer.style.display = "none";
+	if (
+		secondDate.value > expireDate.innerHTML ||
+		thirdDate.value > expireDate.innerHTML
+	) {
+		newThirdRangeContainer.style.display = "none";
+		newRevisitContainer.style.display = "none";
+		expiredContainer.style.display = "flex";
 	}
 }
 prescription();
