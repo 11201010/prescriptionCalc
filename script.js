@@ -58,25 +58,30 @@ function endDate(date, num) {
 }
 
 function prescription() {
+	// toggle thirdClass element's display according to dispenseNum.value
 	let thirdClass = document.querySelectorAll(".third");
 	thirdClass.forEach((container) => {
 		container.style.display = dispenseNum.value < 3 ? "none" : "flex";
 	});
+	// set default range
 	defaultFirstRange.innerHTML =
 		startDate(registerDate, 1) + " ~ " + endDate(registerDate, 1);
 	defaultSecondRange.innerHTML =
 		startDate(registerDate, 2) + " ~ " + endDate(registerDate, 2);
 	defaultThirdRange.innerHTML =
 		startDate(registerDate, 3) + " ~ " + endDate(registerDate, 3);
+	// set expireDate
 	expireDate.innerHTML = moment(registerDate.value)
 		.add(interval.value * dispenseNum.value, "d")
 		.format("YYYY-MM-DD");
+	// check secondCannotEarly
 	secondCannotEarly.innerHTML =
 		"第二次領藥日期至少須在" + startDate(registerDate, 2) + "(含)以後";
 	secondCannotEarlyContainer.style.display =
 		secondDate.value >= startDate(registerDate, 2) || secondDate.value == ""
 			? "none"
 			: "flex";
+	// check if newThirdRange is needed
 	let secondDateInInterval =
 		secondDate.value >= startDate(registerDate, 2) &&
 		secondDate.value <= endDate(registerDate, 2);
@@ -86,7 +91,9 @@ function prescription() {
 		? startDate(secondDate, 2) + " ~ " + endDate(registerDate, 3)
 		: startDate(secondDate, 2);
 	newThirdRangeContainer.style.display =
-		secondDate.value == "" || secondDateInInterval ? "none" : "flex";
+		secondDate.value == "" || secondDateInInterval || dispenseNum.value < 3
+			? "none"
+			: "flex";
 	// newThirdRangeContainer initialization
 	newThirdRangeContainer.classList.add("alert-warning");
 	if (newThirdRange.innerHTML == defaultThirdRange.innerHTML) {
@@ -105,16 +112,19 @@ function prescription() {
 	thirdCanEarly.innerHTML =
 		"第三次領藥日期至少須在" + startDate(secondDate, 2) + "(含)以後";
 	// check newRevisit
-	newRevisitContainer.style.display = revisitDate.value == "" ? "none" : "flex";
 	let newRevisitDateAfterNext = moment(secondDate.value)
 		.add((interval.value - 10) * 2, "d")
 		.format("YYYY-MM-DD");
 	if (dispenseNum.value < 3) {
+		newRevisitContainer.style.display =
+			secondDate.value > endDate(registerDate, 2) ? "flex" : "none";
 		newRevisit.innerHTML =
 			startDate(secondDate, 2) > revisitDate.value
 				? "預約回診日期至少須在" + startDate(secondDate, 2) + "以後"
 				: "否";
 	} else {
+		newRevisitContainer.style.display =
+			thirdDate.value > endDate(registerDate, 3) ? "flex" : "none";
 		if (thirdDate.value == "") {
 			newRevisit.innerHTML =
 				secondDateInInterval ||
