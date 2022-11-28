@@ -1,4 +1,24 @@
+:root {
+	--default: #777;
+	--primary: #428bca;
+	--success: #5cb85c;
+	--danger: #d9534f;
+	--warning: #f0ad4e;
+	--info: #5bc0de;
+}
+
 * {
 	font-family: "Microsoft YaHei", Helvetica, Arial, Lucida Grande, Tahoma,
 		sans-serif;
+}
+.callout {
+	padding: 1rem;
+	margin-bottom: 1rem;
+	border: 1px solid #eee;
+	border-radius: 0.25rem;
+	border-left-width: 0.5rem;
+	border-left-color: var(--default);
+}
+h4 {
+	color: var(--default);
 }
