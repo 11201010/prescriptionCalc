@@ -28,7 +28,7 @@
 				<h4>春節假期提早領藥</h4>
 				測試發文
 			</div> -->
-			<div onchange="prescription()">
+			<div onchange="calcPrescriptionDate()">
 				<div class="row alert alert-primary">
 					<label class="col" for="registerDate">處方箋看診日期(就醫日期)</label>
 					<input class="col" type="date" id="registerDate" />
@@ -37,7 +37,7 @@
 					<label class="col" for="interval">給藥天數</label>
 					<select class="col" name="interval" id="interval">
 						<option value="21">21</option>
-						<option value="28" selected>28</option>
+						<option value="28">28</option>
 						<option value="29">29</option>
 						<option value="30">30</option>
 					</select>
@@ -46,7 +46,7 @@
 					<label class="col" for="dispenseNum">可調劑次數</label>
 					<select class="col" name="dispenseNum" id="dispenseNum">
 						<option value="2">2</option>
-						<option value="3" selected>3</option>
+						<option value="3">3</option>
 					</select>
 				</div>
 				<div class="row alert alert-secondary">
@@ -65,8 +65,8 @@
 					<label class="col" for="secondDate">第二次實際領藥日期</label>
 					<input class="col" type="date" id="secondDate" />
 				</div>
-				<div class="row alert alert-danger" id="secondCannotEarlyContainer">
-					<span class="col" id="secondCannotEarly"></span>
+				<div class="row alert alert-danger" id="secondCannotEarlierContainer">
+					<span class="col" id="secondCannotEarlier"></span>
 				</div>
 				<div class="third row alert alert-secondary">
 					<div class="col">第三次預設領藥區間</div>
@@ -82,20 +82,20 @@
 				</div>
 				<div
 					class="third row alert alert-success alert-danger"
-					id="thirdCanEarlyContainer"
+					id="thirdCanEarlierContainer"
 				>
-					<span class="col" id="thirdCanEarly"></span>
+					<span class="col" id="thirdCanEarlier"></span>
 				</div>
 				<div class="row alert alert-primary">
-					<label class="col" for="revisitDate">預約回診日期</label>
-					<input class="col" type="date" id="revisitDate" />
+					<label class="col" for="followupDate">預約回診日期</label>
+					<input class="col" type="date" id="followupDate" />
 				</div>
 				<div
 					class="row alert alert-success alert-warning"
-					id="newRevisitContainer"
+					id="newFollowupContainer"
 				>
 					<div class="col">需重新約診？</div>
-					<span class="col" id="newRevisit"></span>
+					<span class="col" id="newFollowup"></span>
 				</div>
 				<div class="row alert alert-danger" id="expiredContainer">
 					<span class="col">處方箋已過期，不可領藥。</span>
