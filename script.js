@@ -157,7 +157,7 @@ function checkNewFollowup() {
 }
 
 function setExpireDisplay() {
-	// expiredContainer.style.display = "none";
+	expiredContainer.style.display = "none";
 	if (
 		secondDate.value > expireDate.innerHTML ||
 		thirdDate.value > expireDate.innerHTML
