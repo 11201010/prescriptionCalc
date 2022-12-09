@@ -97,7 +97,6 @@ function calcNewThirdRange() {
 }
 
 function setNewThirdDisplay() {
-	console.log(secondDateInInterval);
 	newThirdRangeContainer.style.display =
 		secondDate.value == "" || secondDateInInterval || dispenseNum.value < 3
 			? "none"
@@ -158,7 +157,7 @@ function checkNewFollowup() {
 }
 
 function setExpireDisplay() {
-	expiredContainer.style.display = "none";
+	// expiredContainer.style.display = "none";
 	if (
 		secondDate.value > expireDate.innerHTML ||
 		thirdDate.value > expireDate.innerHTML
