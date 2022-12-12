@@ -172,10 +172,10 @@ function calcPrescriptionDate() {
 	calcDefaults();
 	setThirdDisplay();
 	checkSecondCanEarlier();
-	calcNewThirdRange();
 	secondDateInInterval =
 		secondDate.value >= startDate(registerDate, 2) &&
 		secondDate.value <= endDate(registerDate, 2);
+	calcNewThirdRange();
 	setNewThirdDisplay();
 	checkThirdCanEarlier();
 	newFollowupDateAfterNext = moment(secondDate.value)
