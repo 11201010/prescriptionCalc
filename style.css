@@ -16,7 +16,7 @@
 	border: 1px solid #eee;
 	border-radius: 0.25rem;
 	border-left-width: 0.5rem;
-	border-left-color: var(--default);
+	border-left-color: var(--danger);
 }
 h4 {
 	color: var(--default);
