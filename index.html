@@ -24,10 +24,11 @@
 	<body>
 		<div class="container">
 			<h1 class="p-3">慢性病連續處方箋給藥日期計算</h1>
-			<!-- <div id="news" class="row callout">
-				<h4>春節假期提早領藥</h4>
-				測試發文
-			</div> -->
+			<div id="newYearContainer" class="row callout">
+				<h4>春節假期提前領藥說明</h4>
+				2023年春節假期：2023年1月20日起至2023年1月29日止，共10天。
+				考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前10天，即2023年1月10日(含)起回診或預領下個月(次)用藥。
+			</div>
 			<div onchange="calcPrescriptionDate()">
 				<div class="row alert alert-primary">
 					<label class="col" for="registerDate">處方箋看診日期(就醫日期)</label>
@@ -65,7 +66,10 @@
 					<label class="col" for="secondDate">第二次實際領藥日期</label>
 					<input class="col" type="date" id="secondDate" />
 				</div>
-				<div class="row alert alert-danger" id="secondCannotEarlierContainer">
+				<div
+					class="row alert alert-success alert-danger"
+					id="secondCannotEarlierContainer"
+				>
 					<span class="col" id="secondCannotEarlier"></span>
 				</div>
 				<div class="third row alert alert-secondary">
