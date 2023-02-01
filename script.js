@@ -182,7 +182,7 @@ function endDateInNewYearHolidays(n) {
 }
 
 function checkBeforeNewYear() {
-	if (moment() > newYearEndDate) {
+	if (moment().format("YYYY-MM-DD") > newYearEndDate) {
 		newYearContainer.style.display = "none";
 		return;
 	}
