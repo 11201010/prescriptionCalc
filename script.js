@@ -129,8 +129,12 @@ function checkThirdCanEarlier() {
 	thirdCanEarlierContainer.classList.add("alert-danger");
 	if (thirdDate.value >= startDate(secondDate, 2))
 		thirdCanEarlierContainer.classList.remove("alert-danger");
+	let thirdEarliestDate =
+		secondDate.value == ""
+			? startDate(registerDate, 3)
+			: startDate(secondDate, 2);
 	thirdCanEarlier.innerHTML =
-		"第三次領藥日期至少須在" + startDate(secondDate, 2) + "(含)以後。";
+		"第三次領藥日期至少須在" + thirdEarliestDate + "(含)以後。";
 }
 
 let newFollowupDateAfterNext;
