@@ -31,7 +31,6 @@ secondDate.value = "";
 thirdDate.value = "";
 followupDate.value = "";
 
-// testing by setting data value
 function test(date1, intv, dispNum, date2, date3, date4) {
 	registerDate.value = date1
 		.toString()
@@ -57,12 +56,14 @@ function test(date1, intv, dispNum, date2, date3, date4) {
 // expect newThirdStartDate = 20200712
 // test(20220101, 30, 3, 20220219);
 // expect newThirdStartDate = 20220311
-// test(20200418, 28, 3, undefined, 20200622);
-// expect followupDate = 20200710
 // test(20221020, 28, 3, 20221107, 20221126);
 // expect thirdCanEarlierContainer to green
+// test(20200418, 28, 3, undefined, 20200622);
+// expect followupDate = 20200710 and newFollowupContainer to yellow
 // test(20230103, 28, 3, 20230221, 20230311, 20230328);
-// !expect newFollowupContainer to red when newFollowupDate > followupDate
+// expect newFollowupContainer to red
+test(20230101, 28, 2, 20230208, undefined, 20230226);
+// expect newFollowupContainer to green
 
 function startDate(date, num) {
 	return num == 1
@@ -157,9 +158,12 @@ function checkThirdCanEarlier() {
 		"第三次領藥日期至少須在" + thirdEarliestDate + "(含)以後。";
 }
 
-let newFollowupDateAfterNext;
-
 function checkNewFollowup() {
+	let newFollowupDate =
+		dispenseNum.value < 3 ? startDate(secondDate, 2) : startDate(thirdDate, 2);
+	let newFollowupDateAfterNext = moment(secondDate.value)
+		.add((interval.value - 10) * 2, "d")
+		.format("YYYY-MM-DD");
 	if (dispenseNum.value < 3) {
 		newFollowupContainer.style.display =
 			secondDate.value > endDate(registerDate, 2) ? "flex" : "none";
@@ -184,6 +188,12 @@ function checkNewFollowup() {
 		}
 	}
 	newFollowupContainer.classList.add("alert-warning");
+	if (newFollowupDate > followupDate.value && followupDate.value != "") {
+		newFollowupContainer.classList.remove("alert-warning");
+		newFollowupContainer.classList.add("alert-danger");
+	} else {
+		newFollowupContainer.classList.remove("alert-danger");
+	}
 	if (newFollowupDateAfterNext <= followupDate.value && thirdDate.value == "")
 		newFollowup.innerHTML = "否";
 	if (newFollowup.innerHTML == "否") {
@@ -251,9 +261,6 @@ function calcPrescriptionDate() {
 	calcNewThirdRange();
 	setNewThirdDisplay();
 	checkThirdCanEarlier();
-	newFollowupDateAfterNext = moment(secondDate.value)
-		.add((interval.value - 10) * 2, "d")
-		.format("YYYY-MM-DD");
 	checkNewFollowup();
 	checkBeforeNewYear();
 	setExpireDisplay();
