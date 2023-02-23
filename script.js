@@ -62,7 +62,7 @@ function test(date1, intv, dispNum, date2, date3, date4) {
 // expect followupDate = 20200710 and newFollowupContainer to yellow
 // test(20230103, 28, 3, 20230221, 20230311, 20230328);
 // expect newFollowupContainer to red
-test(20230101, 28, 2, 20230208, undefined, 20230226);
+// test(20230101, 28, 2, 20230208, undefined, 20230226);
 // expect newFollowupContainer to green
 
 function startDate(date, num) {
