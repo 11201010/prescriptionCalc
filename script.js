@@ -31,18 +31,38 @@ secondDate.value = "";
 thirdDate.value = "";
 followupDate.value = "";
 
-// testing by setting date.value
-// 20220101, 30, 20220131
-// 20221020, 28, 20221107, 20221126
-// 20200522, 30, 20200622
-// 20200418, 28, ?, 20200622
-// 20220101, 30, 20220219
-// 20221224, 28, 20230110
-// 20221130, 28, ?, 20230110
-// registerDate.value = "2022-11-30";
-// secondDate.value = "2022-11-07";
-// thirdDate.value = "2023-01-10";
-// followupDate.value = "2022-04-01";
+// testing by setting data value
+function test(date1, intv, dispNum, date2, date3, date4) {
+	registerDate.value = date1
+		.toString()
+		.replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+	interval.value = intv;
+	dispenseNum.value = dispNum;
+	secondDate.value =
+		date2 != undefined
+			? date2.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")
+			: "";
+	thirdDate.value =
+		date3 != undefined
+			? date3.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")
+			: "";
+	followupDate.value =
+		date4 != undefined
+			? date4.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")
+			: "";
+}
+// test(20220103, 30, 3, 20220131);
+// expect newThirdStartDate = 20220222
+// test(20200522, 30, 3, 20200622);
+// expect newThirdStartDate = 20200712
+// test(20220101, 30, 3, 20220219);
+// expect newThirdStartDate = 20220311
+// test(20200418, 28, 3, undefined, 20200622);
+// expect followupDate = 20200710
+// test(20221020, 28, 3, 20221107, 20221126);
+// expect thirdCanEarlierContainer to green
+// test(20230103, 28, 3, 20230221, 20230311, 20230328);
+// !expect newFollowupContainer to red when newFollowupDate > followupDate
 
 function startDate(date, num) {
 	return num == 1
