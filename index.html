@@ -1,124 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link
-			rel="icon"
-			type="image/png"
-			href="https://raw.githubusercontent.com/11201010/prescriptionCalc/main/favicon.png"
-		/>
-		<title>慢性病連續處方箋給藥日期計算</title>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
-		/>
-		<link rel="stylesheet" href="style.css" />
-		<script
-			defer
-			src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
-		></script>
-		<script defer src="script.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<h1 class="p-3">慢性病連續處方箋給藥日期計算</h1>
-			<div id="newYearContainer" class="row callout">
-				<h4>春節假期提前領藥說明</h4>
-				2023年春節假期：2023年1月20日起至2023年1月29日止，共10天。
-				考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前10天，即2023年1月10日(含)起回診或預領下個月(次)用藥。
-			</div>
-			<div onchange="calcPrescriptionDate()">
-				<div class="row alert alert-primary">
-					<label class="col" for="registerDate">處方箋看診日期(就醫日期)</label>
-					<input class="col" type="date" id="registerDate" />
-				</div>
-				<div class="row alert alert-primary">
-					<label class="col" for="interval">給藥天數</label>
-					<select class="col" name="interval" id="interval">
-						<option value="21">21</option>
-						<option value="28">28</option>
-						<option value="29">29</option>
-						<option value="30">30</option>
-					</select>
-				</div>
-				<div class="row alert alert-primary">
-					<label class="col" for="dispenseNum">可調劑次數</label>
-					<select class="col" name="dispenseNum" id="dispenseNum">
-						<option value="2">2</option>
-						<option value="3">3</option>
-					</select>
-				</div>
-				<div class="row alert alert-secondary">
-					<div class="col">處方箋到期日(不可領藥)</div>
-					<span class="col" id="expireDate"></span>
-				</div>
-				<div class="row alert alert-secondary">
-					<div class="col">第一次預設領藥區間</div>
-					<span class="col" id="defaultFirstRange"></span>
-				</div>
-				<div class="row alert alert-secondary">
-					<div class="col">第二次預設領藥區間</div>
-					<span class="col" id="defaultSecondRange"></span>
-				</div>
-				<div class="row alert alert-primary">
-					<label class="col" for="secondDate">第二次實際領藥日期</label>
-					<input class="col" type="date" id="secondDate" />
-				</div>
-				<div
-					class="row alert alert-success alert-danger"
-					id="secondCannotEarlierContainer"
-				>
-					<span class="col" id="secondCannotEarlier"></span>
-				</div>
-				<div class="third row alert alert-secondary">
-					<div class="col">第三次預設領藥區間</div>
-					<span class="col" id="defaultThirdRange"></span>
-				</div>
-				<div class="third row alert alert-warning" id="newThirdRangeContainer">
-					<div class="col">重算第三次可領藥區間</div>
-					<span class="col" id="newThirdRange"></span>
-				</div>
-				<div class="third row alert alert-primary">
-					<label class="col" for="thirdDate">第三次實際領藥日期</label>
-					<input class="col" type="date" id="thirdDate" />
-				</div>
-				<div
-					class="third row alert alert-success alert-danger"
-					id="thirdCanEarlierContainer"
-				>
-					<span class="col" id="thirdCanEarlier"></span>
-				</div>
-				<div class="row alert alert-primary">
-					<label class="col" for="followupDate">預約回診日期</label>
-					<input class="col" type="date" id="followupDate" />
-				</div>
-				<div
-					class="row alert alert-success alert-warning"
-					id="newFollowupContainer"
-				>
-					<div class="col">需重新約診？</div>
-					<span class="col" id="newFollowup"></span>
-				</div>
-				<div class="row alert alert-danger" id="expiredContainer">
-					<span class="col">處方箋已過期，不可領藥。</span>
-				</div>
-			</div>
-			<div class="row alert alert-info" id="law">
-				<p>
-					<a
-						href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=L0060009&flno=24"
-						>全民健康保險醫療辦法第 24 條</a
-					>：
-				</p>
-				<ol>
-					<li>同一慢性病連續處方箋，應分次調劑。</li>
-					<li>
-						保險對象持慢性病連續處方箋調劑者，須俟上次給藥期間屆滿前十日內，始得憑原處方箋再次調劑。
-					</li>
-				</ol>
-			</div>
-		</div>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://raw.githubusercontent.com/11201010/prescriptionCalc/main/favicon.png"
+    />
+    <title>慢性病連續處方箋給藥日期計算</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
+    ></script>
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="p-3">慢性病連續處方箋給藥日期計算</h1>
+      <div id="newYearContainer" class="row callout">
+        <h4>春節假期提前領藥說明</h4>
+        2023年春節假期：2023年1月20日起至2023年1月29日止，共10天。
+        考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前10天，即2023年1月10日(含)起回診或預領下個月(次)用藥。
+      </div>
+      <div onchange="calcPrescriptionDate()">
+        <div class="row alert alert-primary">
+          <label class="col" for="registerDate">處方箋看診日期(就醫日期)</label>
+          <input class="col" type="date" id="registerDate" />
+        </div>
+        <div class="row alert alert-primary">
+          <label class="col" for="interval">給藥天數</label>
+          <select class="col" name="interval" id="interval">
+            <option value="21">21</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+          </select>
+        </div>
+        <div class="row alert alert-primary">
+          <label class="col" for="dispenseNum">可調劑次數</label>
+          <select class="col" name="dispenseNum" id="dispenseNum">
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+        <div class="row alert alert-secondary">
+          <div class="col">處方箋到期日(不可領藥)</div>
+          <span class="col" id="expireDate"></span>
+        </div>
+        <div class="row alert alert-primary">
+          <label class="col" for="firstDate">第一次實際領藥日期</label>
+          <input class="col" type="date" id="firstDate" />
+        </div>
+        <div class="row alert alert-secondary">
+          <div class="col">第二次預設領藥區間</div>
+          <span class="col" id="defaultSecondRange"></span>
+        </div>
+        <div class="row alert alert-warning" id="newSecondRangeContainer">
+          <div class="col">重算第二次可領藥區間</div>
+          <span class="col" id="newSecondRange"></span>
+        </div>
+        <div class="row alert alert-primary">
+          <label class="col" for="secondDate">第二次實際領藥日期</label>
+          <input class="col" type="date" id="secondDate" />
+        </div>
+        <div
+          class="row alert alert-success alert-danger"
+          id="secondCannotEarlierContainer"
+        >
+          <span class="col" id="secondCannotEarlier"></span>
+        </div>
+        <div class="third row alert alert-secondary">
+          <div class="col">第三次預設領藥區間</div>
+          <span class="col" id="defaultThirdRange"></span>
+        </div>
+        <div class="third row alert alert-warning" id="newThirdRangeContainer">
+          <div class="col">重算第三次可領藥區間</div>
+          <span class="col" id="newThirdRange"></span>
+        </div>
+        <div class="third row alert alert-primary">
+          <label class="col" for="thirdDate">第三次實際領藥日期</label>
+          <input class="col" type="date" id="thirdDate" />
+        </div>
+        <div
+          class="third row alert alert-success alert-danger"
+          id="thirdCanEarlierContainer"
+        >
+          <span class="col" id="thirdCanEarlier"></span>
+        </div>
+        <div class="row alert alert-primary">
+          <label class="col" for="followupDate">預約回診日期</label>
+          <input class="col" type="date" id="followupDate" />
+        </div>
+        <div
+          class="row alert alert-success alert-warning"
+          id="newFollowupContainer"
+        >
+          <div class="col">需重新約診？</div>
+          <span class="col" id="newFollowup"></span>
+        </div>
+        <div class="row alert alert-danger" id="expiredContainer">
+          <span class="col">處方箋已過期，不可領藥。</span>
+        </div>
+      </div>
+      <div class="row alert alert-info" id="law">
+        <p>
+          <a
+            href="https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=L0060009&flno=24"
+            >全民健康保險醫療辦法第 24 條</a
+          >：
+        </p>
+        <ol>
+          <li>同一慢性病連續處方箋，應分次調劑。</li>
+          <li>
+            保險對象持慢性病連續處方箋調劑者，須俟上次給藥期間屆滿前十日內，始得憑原處方箋再次調劑。
+          </li>
+        </ol>
+      </div>
+    </div>
+  </body>
 </html>
