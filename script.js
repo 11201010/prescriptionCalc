@@ -109,6 +109,7 @@ function calcNewSecondRange() {
       ? startDate(firstDate, 2) + " ~ " + endDate(registerDate, 2)
       : startDate(firstDate, 2);
 }
+
 function setNewSecondDisplay() {
   newSecondRangeContainer.style.display =
     firstDate.value != "" && registerDate.value != "" ? "flex" : "none";
