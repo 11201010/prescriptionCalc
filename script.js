@@ -74,6 +74,8 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // expect newFollowupContainer to red
 // test(20230101, 28, 2, undefined, 20230208, undefined, 20230226);
 // expect newFollowupContainer to green
+// test(20230714, 28, 3, undefined, 20230821, 20230907);
+// expect thirdCanEarlierContainer.style.display to flex
 
 function startDate(date, num) {
   return num == 1
@@ -164,7 +166,11 @@ function setNewThirdDisplay() {
 
 function checkThirdCanEarlier() {
   thirdCanEarlierContainer.style.display =
-    thirdDate.value >= startDate(registerDate, 3) || thirdDate.value == ""
+    thirdDate.value == "" ||
+    (secondDate.value <= endDate(registerDate, 2) &&
+      thirdDate.value >= startDate(registerDate, 3)) ||
+    (secondDate.value > endDate(registerDate, 2) &&
+      thirdDate.value >= startDate(secondDate, 2))
       ? "none"
       : "flex";
   thirdCanEarlierContainer.classList.add("alert-danger");
