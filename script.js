@@ -228,8 +228,8 @@ function checkNewFollowup() {
   }
 }
 
-const newYearStartDate = "2023-01-20";
-const newYearEndDate = "2023-01-29";
+const newYearStartDate = "2024-02-08";
+const newYearEndDate = "2024-02-14";
 const tenDaysBeforeNewYear = moment(newYearStartDate)
   .subtract(10, "d")
   .format("YYYY-MM-DD");
