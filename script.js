@@ -244,15 +244,16 @@ const tenDaysBeforeNewYear = moment(newYearStartDate)
   .format("YYYY-MM-DD");
 
 newYearAnnouncement.textContent =
-  "2024年春節假期：" +
-  newYearStartDate.replace(/(\d{4})-(\d{2})-(\d{2})/, "$1年$2月$3日") +
+  newYearStartDate.replace(/(\d+)\-(\d+)\-(\d+)/, "$1") +
+  "年春節假期：" +
+  newYearStartDate.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
   "起至" +
-  newYearEndDate.replace(/(\d{4})-(\d{2})-(\d{2})/, "$1年$2月$3日") +
+  newYearEndDate.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
   "止，共" +
   moment(newYearEndDate).add(1, "d").diff(moment(newYearStartDate), "d") +
   "天。" +
   "考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前10天，即" +
-  tenDaysBeforeNewYear.replace(/(\d{4})-(\d{2})-(\d{2})/, "$1年$2月$3日") +
+  tenDaysBeforeNewYear.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
   "(含)起回診或預領下個月(次)用藥。";
 
 function endDateInNewYearHolidays(date, n) {
