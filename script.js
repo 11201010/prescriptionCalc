@@ -26,6 +26,7 @@ let newFollowup = document.getElementById("newFollowup");
 let newFollowupContainer = document.getElementById("newFollowupContainer");
 let expiredContainer = document.getElementById("expiredContainer");
 let newYearContainer = document.getElementById("newYearContainer");
+let newYearAnnouncement = document.getElementById("newYearAnnouncement");
 
 // initialization
 registerDate.value = "";
@@ -104,17 +105,17 @@ function endDate(date, num) {
 }
 
 function calcDefaults() {
-  defaultSecondRange.innerHTML =
+  defaultSecondRange.textContent =
     startDate(registerDate, 2) + " ~ " + endDate(registerDate, 2);
-  defaultThirdRange.innerHTML =
+  defaultThirdRange.textContent =
     startDate(registerDate, 3) + " ~ " + endDate(registerDate, 3);
-  expireDate.innerHTML = moment(registerDate.value)
+  expireDate.textContent = moment(registerDate.value)
     .add(interval.value * dispenseNum.value, "d")
     .format("YYYY-MM-DD");
 }
 
 function calcNewSecondRange() {
-  newSecondRange.innerHTML =
+  newSecondRange.textContent =
     startDate(firstDate, 2) <= endDate(registerDate, 2)
       ? startDate(firstDate, 2) + " ~ " + endDate(registerDate, 2)
       : startDate(firstDate, 2);
@@ -134,7 +135,7 @@ function setThirdDisplay() {
 
 function checkSecondCanEarlier() {
   secondCannotEarlierContainer.classList.add("alert-danger");
-  secondCannotEarlier.innerHTML =
+  secondCannotEarlier.textContent =
     "第二次領藥日期至少須在" + startDate(registerDate, 2) + "(含)以後。";
   secondCannotEarlierContainer.style.display =
     secondDate.value >= startDate(registerDate, 2) || secondDate.value == ""
@@ -150,7 +151,7 @@ function dateInInterval(date, n) {
 }
 
 function calcNewThirdRange() {
-  newThirdRange.innerHTML = dateInInterval(secondDate, 2)
+  newThirdRange.textContent = dateInInterval(secondDate, 2)
     ? "第三次領藥區間維持不變"
     : startDate(secondDate, 2) <= endDate(registerDate, 3)
     ? startDate(secondDate, 2) + " ~ " + endDate(registerDate, 3)
@@ -165,10 +166,10 @@ function setNewThirdDisplay() {
       ? "none"
       : "flex";
   newThirdRangeContainer.classList.add("alert-warning");
-  if (newThirdRange.innerHTML == defaultThirdRange.innerHTML) {
+  if (newThirdRange.textContent == defaultThirdRange.textContent) {
     newThirdRangeContainer.classList.remove("alert-warning");
     newThirdRangeContainer.classList.add("alert-success");
-    newThirdRange.innerHTML = "第三次領藥區間維持不變。";
+    newThirdRange.textContent = "第三次領藥區間維持不變。";
   }
 }
 
@@ -188,7 +189,7 @@ function checkThirdCanEarlier() {
     secondDate.value == ""
       ? startDate(registerDate, 3)
       : startDate(secondDate, 2);
-  thirdCanEarlier.innerHTML =
+  thirdCanEarlier.textContent =
     "第三次領藥日期至少須在" + thirdEarliestDate + "(含)以後。";
 }
 
@@ -201,7 +202,7 @@ function checkNewFollowup() {
   if (dispenseNum.value < 3) {
     newFollowupContainer.style.display =
       secondDate.value > endDate(registerDate, 2) ? "flex" : "none";
-    newFollowup.innerHTML =
+    newFollowup.textContent =
       startDate(secondDate, 2) > followupDate.value
         ? "預約回診日期至少須在" + startDate(secondDate, 2) + "以後。"
         : "否";
@@ -209,13 +210,13 @@ function checkNewFollowup() {
     newFollowupContainer.style.display =
       thirdDate.value > endDate(registerDate, 3) ? "flex" : "none";
     if (thirdDate.value == "") {
-      newFollowup.innerHTML =
+      newFollowup.textContent =
         dateInInterval(secondDate, 2) ||
-        newThirdRange.innerHTML == "第三次領藥區間維持不變"
+        newThirdRange.textContent == "第三次領藥區間維持不變"
           ? "否"
           : "預約回診日期至少須在" + newFollowupDateAfterNext + "以後。";
     } else {
-      newFollowup.innerHTML =
+      newFollowup.textContent =
         startDate(thirdDate, 2) > followupDate.value
           ? "預約回診日期至少須在" + startDate(thirdDate, 2) + "以後。"
           : "否";
@@ -229,8 +230,8 @@ function checkNewFollowup() {
     newFollowupContainer.classList.remove("alert-danger");
   }
   if (newFollowupDateAfterNext <= followupDate.value && thirdDate.value == "")
-    newFollowup.innerHTML = "否";
-  if (newFollowup.innerHTML == "否") {
+    newFollowup.textContent = "否";
+  if (newFollowup.textContent == "否") {
     newFollowupContainer.classList.remove("alert-warning");
     newFollowupContainer.classList.add("alert-success");
   }
@@ -242,10 +243,21 @@ const tenDaysBeforeNewYear = moment(newYearStartDate)
   .subtract(10, "d")
   .format("YYYY-MM-DD");
 
-function endDateInNewYearHolidays(n) {
+newYearAnnouncement.textContent =
+  "2024年春節假期：" +
+  newYearStartDate.replace(/(\d{4})-(\d{2})-(\d{2})/, "$1年$2月$3日") +
+  "起至" +
+  newYearEndDate.replace(/(\d{4})-(\d{2})-(\d{2})/, "$1年$2月$3日") +
+  "止，共" +
+  moment(newYearEndDate).add(1, "d").diff(moment(newYearStartDate), "d") +
+  "天。" +
+  "考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前10天，即" +
+  tenDaysBeforeNewYear.replace(/(\d{4})-(\d{2})-(\d{2})/, "$1年$2月$3日") +
+  "(含)起回診或預領下個月(次)用藥。";
+
+function endDateInNewYearHolidays(date, n) {
   return (
-    endDate(registerDate, n) >= newYearStartDate &&
-    endDate(registerDate, n) <= newYearEndDate
+    endDate(date, n) >= newYearStartDate && endDate(date, n) <= newYearEndDate
   );
 }
 
@@ -254,9 +266,9 @@ function checkBeforeNewYear() {
     newYearContainer.style.display = "none";
     return;
   }
-  if (endDateInNewYearHolidays(2)) {
+  if (endDateInNewYearHolidays(registerDate, 2)) {
     secondCannotEarlierContainer.style.display = "flex";
-    secondCannotEarlier.innerHTML =
+    secondCannotEarlier.textContent =
       "第二次預設領藥區間之迄日介於春節期間，故可提前至" +
       tenDaysBeforeNewYear +
       "領藥。";
@@ -264,9 +276,9 @@ function checkBeforeNewYear() {
       secondCannotEarlierContainer.classList.remove("alert-danger");
     }
   }
-  if (endDateInNewYearHolidays(3) && dispenseNum.value > 2) {
+  if (endDateInNewYearHolidays(registerDate, 3) && dispenseNum.value > 2) {
     thirdCanEarlierContainer.style.display = "flex";
-    thirdCanEarlier.innerHTML =
+    thirdCanEarlier.textContent =
       "第三次預設領藥區間之迄日介於春節期間，故可提前至" +
       tenDaysBeforeNewYear +
       "領藥。";
@@ -279,8 +291,8 @@ function checkBeforeNewYear() {
 function setExpireDisplay() {
   expiredContainer.style.display = "none";
   if (
-    secondDate.value > expireDate.innerHTML ||
-    thirdDate.value > expireDate.innerHTML
+    secondDate.value > expireDate.textContent ||
+    thirdDate.value > expireDate.textContent
   ) {
     newThirdRangeContainer.style.display = "none";
     newFollowupContainer.style.display = "none";
