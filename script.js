@@ -76,6 +76,14 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // expect newFollowupContainer to green
 // test(20230714, 28, 3, undefined, 20230821, 20230907);
 // expect thirdCanEarlierContainer.style.display to flex
+// =================================================================
+// when (newYearStartDate = "2024-02-08", newYearEndDate = "2024-02-14")
+// test(20240118, 28, 3);
+// expect "第二次預設領藥區間之迄日介於春節期間，故可提前至2024-01-29領藥。"
+// test(20231218, 28, 3);
+// expect "第三次預設領藥區間之迄日介於春節期間，故可提前至2024-01-29領藥。"
+// test(20231218, 28, 2);
+// expect thirdCanEarlierContainer.style.display to none
 
 function startDate(date, num) {
   return num == 1
@@ -256,7 +264,7 @@ function checkBeforeNewYear() {
       secondCannotEarlierContainer.classList.remove("alert-danger");
     }
   }
-  if (endDateInNewYearHolidays(3)) {
+  if (endDateInNewYearHolidays(3) && dispenseNum.value > 2) {
     thirdCanEarlierContainer.style.display = "flex";
     thirdCanEarlier.innerHTML =
       "第三次預設領藥區間之迄日介於春節期間，故可提前至" +
