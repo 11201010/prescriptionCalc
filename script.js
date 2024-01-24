@@ -287,6 +287,11 @@ function checkBeforeNewYear() {
       thirdCanEarlierContainer.classList.remove("alert-danger");
     }
   }
+  if (endDateInNewYearHolidays(secondDate, 2)) {
+    newFollowupContainer.style.display = "flex";
+    newFollowup.textContent =
+      "吃完藥的日期介於春節期間，故可提前至" + tenDaysBeforeNewYear + "領藥。";
+  }
 }
 
 function setExpireDisplay() {
