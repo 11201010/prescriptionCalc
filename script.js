@@ -85,6 +85,8 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // expect "第三次預設領藥區間之迄日介於春節期間，故可提前至2024-01-29領藥。"
 // test(20231218, 28, 2);
 // expect thirdCanEarlierContainer.style.display to none
+// test(20231226, 28, 3, undefined, 20240115, 20240209);
+// expect newfollowupContainer.style.display to none
 
 function startDate(date, num) {
   return num == 1
@@ -287,7 +289,10 @@ function checkBeforeNewYear() {
       thirdCanEarlierContainer.classList.remove("alert-danger");
     }
   }
-  if (endDateInNewYearHolidays(secondDate, 2)) {
+  if (
+    (endDateInNewYearHolidays(secondDate, 2) && dispenseNum.value < 3) ||
+    endDateInNewYearHolidays(thirdDate, 2)
+  ) {
     newFollowupContainer.style.display = "flex";
     newFollowup.textContent =
       "吃完藥的日期介於春節期間，故可提前至" + tenDaysBeforeNewYear + "領藥。";
