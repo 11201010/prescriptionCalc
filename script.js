@@ -78,11 +78,12 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // test(20230714, 28, 3, undefined, 20230821, 20230907);
 // expect thirdCanEarlierContainer.style.display to flex
 // =================================================================
-// when (newYearStartDate = "2024-02-08", newYearEndDate = "2024-02-14")
-// test(20240118, 28, 3);
-// expect "第二次預設領藥區間之迄日介於春節期間，故可提前至2024-01-29領藥。"
-// test(20231218, 28, 3);
-// expect "第三次預設領藥區間之迄日介於春節期間，故可提前至2024-01-29領藥。"
+// when (newYearStartDate = "2025-01-25", newYearEndDate = "2025-02-02")
+// test(20241230, 28, 3, undefined, 20250115);
+// expect "第二次預設領藥區間之迄日介於春節期間，故可提前至2025-01-15領藥。"
+// test(20241201, 28, 3, undefined, 20241229, 20250115);
+// expect "第三次預設領藥區間之迄日介於春節期間，故可提前至2025-01-15領藥。"
+// =================================================================
 // test(20231218, 28, 2);
 // expect thirdCanEarlierContainer.style.display to none
 // test(20231226, 28, 3, undefined, 20240115, 20240209);
@@ -239,8 +240,8 @@ function checkNewFollowup() {
   }
 }
 
-const newYearStartDate = "2024-02-08";
-const newYearEndDate = "2024-02-14";
+const newYearStartDate = "2025-01-25";
+const newYearEndDate = "2025-02-02";
 const tenDaysBeforeNewYear = moment(newYearStartDate)
   .subtract(10, "d")
   .format("YYYY-MM-DD");
