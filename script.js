@@ -78,11 +78,13 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // test(20230714, 28, 3, undefined, 20230821, 20230907);
 // expect thirdCanEarlierContainer.style.display to flex
 // =================================================================
-// when (newYearStartDate = "2025-01-25", newYearEndDate = "2025-02-02")
+// when((newYearStartDate = "2025-01-25"), (newYearEndDate = "2025-02-02"));
 // test(20241230, 28, 3, undefined, 20250115);
-// expect "第二次預設領藥區間之迄日介於春節期間，故可提前至2025-01-15領藥。"
+// expect "第一次領藥日的28天後為2025-01-26，介於春節期間，故第二次可提前至2025-01-15領藥。"
 // test(20241201, 28, 3, undefined, 20241229, 20250115);
-// expect "第三次預設領藥區間之迄日介於春節期間，故可提前至2025-01-15領藥。"
+// expect "第二次領藥日的28天後為2025-01-25，介於春節期間，故第三次可提前至2025-01-15領藥。"
+// test(20241026, 28, 3, undefined, undefined, 20250106, 20250115);
+// expect "第三次領藥日的28天後為2025-02-02，介於春節期間，故可提前至2025-01-15回診領藥。"
 // =================================================================
 // test(20231218, 28, 2);
 // expect thirdCanEarlierContainer.style.display to none
@@ -272,8 +274,13 @@ function checkBeforeNewYear() {
   }
   if (endDateInNewYearHolidays(registerDate, 2)) {
     secondCannotEarlierContainer.style.display = "flex";
+    newSecondRangeContainer.style.display = "none";
     secondCannotEarlier.textContent =
-      "第二次預設領藥區間之迄日介於春節期間，故可提前至" +
+      "第一次領藥日的" +
+      interval.value +
+      "天後為" +
+      endDate(firstDate.value == "" ? registerDate : firstDate, 2) +
+      "，介於春節期間，故第二次可提前至" +
       tenDaysBeforeNewYear +
       "領藥。";
     if (secondDate.value == "" || secondDate.value >= tenDaysBeforeNewYear) {
@@ -282,8 +289,13 @@ function checkBeforeNewYear() {
   }
   if (endDateInNewYearHolidays(registerDate, 3) && dispenseNum.value > 2) {
     thirdCanEarlierContainer.style.display = "flex";
+    newThirdRangeContainer.style.display = "none";
     thirdCanEarlier.textContent =
-      "第三次預設領藥區間之迄日介於春節期間，故可提前至" +
+      "第二次領藥日的" +
+      interval.value +
+      "天後為" +
+      endDate(secondDate, 2) +
+      "，介於春節期間，故第三次可提前至" +
       tenDaysBeforeNewYear +
       "領藥。";
     if (thirdDate.value == "" || thirdDate.value >= tenDaysBeforeNewYear) {
@@ -296,7 +308,14 @@ function checkBeforeNewYear() {
   ) {
     newFollowupContainer.style.display = "flex";
     newFollowup.textContent =
-      "吃完藥的日期介於春節期間，故可提前至" + tenDaysBeforeNewYear + "領藥。";
+      "第三次領藥日的" +
+      interval.value +
+      "天後為" +
+      endDate(thirdDate, 2) +
+      "，介於春節期間，故可提前至" +
+      tenDaysBeforeNewYear +
+      "回診領藥。";
+    newFollowupContainer.classList.remove("alert-danger");
   }
 }
 
