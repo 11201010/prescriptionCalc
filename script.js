@@ -84,7 +84,9 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // test(20241201, 28, 3, undefined, 20241229, 20250115);
 // expect "第二次領藥日的28天後為2025-01-25，介於春節期間，故第三次可提前至2025-01-15領藥。"
 // test(20241026, 28, 3, undefined, undefined, 20250106, 20250115);
-// expect "第三次領藥日的28天後為2025-02-02，介於春節期間，故可提前至2025-01-15回診領藥。"
+// expect "最後一次領藥日的28天後為2025-02-02，介於春節期間，故可提前至2025-01-15回診領藥。"
+// test(20241130, 28, 2, undefined, 20250106, 20250115);
+// expect "最後一次領藥日的28天後為2025-02-02，介於春節期間，故可提前至2025-01-15回診領藥。"
 // =================================================================
 // test(20231218, 28, 2);
 // expect thirdCanEarlierContainer.style.display to none
@@ -261,9 +263,9 @@ newYearAnnouncement.textContent =
   tenDaysBeforeNewYear.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
   "(含)起回診或預領下個月(次)用藥。";
 
-function endDateInNewYearHolidays(date, n) {
+function afterIntervalInNewYearHolidays(date) {
   return (
-    endDate(date, n) >= newYearStartDate && endDate(date, n) <= newYearEndDate
+    endDate(date, 2) >= newYearStartDate && endDate(date, 2) <= newYearEndDate
   );
 }
 
@@ -272,7 +274,8 @@ function checkBeforeNewYear() {
     newYearContainer.style.display = "none";
     return;
   }
-  if (endDateInNewYearHolidays(registerDate, 2)) {
+  let realFirstDate = firstDate.value == "" ? registerDate : firstDate;
+  if (afterIntervalInNewYearHolidays(realFirstDate)) {
     secondCannotEarlierContainer.style.display = "flex";
     newSecondRangeContainer.style.display = "none";
     secondCannotEarlier.textContent =
@@ -287,7 +290,11 @@ function checkBeforeNewYear() {
       secondCannotEarlierContainer.classList.remove("alert-danger");
     }
   }
-  if (endDateInNewYearHolidays(registerDate, 3) && dispenseNum.value > 2) {
+  if (
+    afterIntervalInNewYearHolidays(secondDate) &&
+    dispenseNum.value > 2 &&
+    secondDate.value != ""
+  ) {
     thirdCanEarlierContainer.style.display = "flex";
     newThirdRangeContainer.style.display = "none";
     thirdCanEarlier.textContent =
@@ -303,15 +310,19 @@ function checkBeforeNewYear() {
     }
   }
   if (
-    (endDateInNewYearHolidays(secondDate, 2) && dispenseNum.value < 3) ||
-    endDateInNewYearHolidays(thirdDate, 2)
+    (afterIntervalInNewYearHolidays(secondDate) && dispenseNum.value < 3) ||
+    (afterIntervalInNewYearHolidays(thirdDate) && thirdDate.value != "")
   ) {
+    let realLastDate = dispenseNum.value < 3 ? secondDate : thirdDate;
+    if (dispenseNum.value < 3) {
+      thirdCanEarlierContainer.style.display = "none";
+    }
     newFollowupContainer.style.display = "flex";
     newFollowup.textContent =
-      "第三次領藥日的" +
+      "最後一次領藥日的" +
       interval.value +
       "天後為" +
-      endDate(thirdDate, 2) +
+      endDate(realLastDate, 2) +
       "，介於春節期間，故可提前至" +
       tenDaysBeforeNewYear +
       "回診領藥。";
