@@ -69,6 +69,8 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // expect newThirdStartDate = 20220311
 // test(20221020, 28, 3, undefined, 20221107, 20221126);
 // expect thirdCanEarlierContainer to green
+// test(20230927, 30, 3, undefined, 20231018, 20231115);
+// expect thirdCanEarlierContainer to green
 // test(20200418, 28, 3, undefined, undefined, 20200622);
 // expect followupDate = 20200710 and newFollowupContainer to yellow
 // test(20230103, 28, 3, undefined, 20230221, 20230311, 20230328);
@@ -80,13 +82,11 @@ function test(date0, intv, dispNum, date1, date2, date3, date4) {
 // =================================================================
 // when((newYearStartDate = "2025-01-25"), (newYearEndDate = "2025-02-02"));
 // test(20241230, 28, 3, undefined, 20250115);
-// expect "第一次領藥日的28天後為2025-01-26，介於春節期間，故第二次可提前至2025-01-15領藥。"
-// test(20241201, 28, 3, undefined, 20241229, 20250115);
-// expect "第二次領藥日的28天後為2025-01-25，介於春節期間，故第三次可提前至2025-01-15領藥。"
-// test(20241026, 28, 3, undefined, undefined, 20250106, 20250115);
-// expect "最後一次領藥日的28天後為2025-02-02，介於春節期間，故可提前至2025-01-15回診領藥。"
-// test(20241130, 28, 2, undefined, 20250106, 20250115);
-// expect "最後一次領藥日的28天後為2025-02-02，介於春節期間，故可提前至2025-01-15回診領藥。"
+// expect "第二次預設領藥區間的最後一天2025-01-26，介於春節期間，故第二次可提前至2025-01-15領藥。"
+// test(20241201, 28, 3, undefined, undefined, 20250115);
+// expect " 第三次預設領藥區間的最後一天2025-01-25，介於春節期間，故第三次可提前至2025-01-15領藥。"
+// test(20241211, 28, 3, undefined, 20250104, 20250115);
+// expect thirdCanEarlierContainer to red
 // =================================================================
 // test(20231218, 28, 2);
 // expect thirdCanEarlierContainer.style.display to none
@@ -101,13 +101,13 @@ function startDate(date, num) {
         .format("YYYY-MM-DD");
 }
 
-function endDate(date, num) {
-  return num == 1
+function endDate(date, n) {
+  return n == 1
     ? moment(date.value)
         .add(10 - 1, "d")
         .format("YYYY-MM-DD")
     : moment(date.value)
-        .add(interval.value * (num - 1) - 1, "d")
+        .add(interval.value * (n - 1) - 1, "d")
         .format("YYYY-MM-DD");
 }
 
@@ -263,9 +263,9 @@ newYearAnnouncement.textContent =
   tenDaysBeforeNewYear.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
   "(含)起回診或預領下個月(次)用藥。";
 
-function afterIntervalInNewYearHolidays(date) {
+function isEndDateInNewYearInterval(date, n) {
   return (
-    endDate(date, 2) >= newYearStartDate && endDate(date, 2) <= newYearEndDate
+    newYearStartDate <= endDate(date, n) && endDate(date, n) <= newYearEndDate
   );
 }
 
@@ -275,58 +275,33 @@ function checkBeforeNewYear() {
     return;
   }
   let realFirstDate = firstDate.value == "" ? registerDate : firstDate;
-  if (afterIntervalInNewYearHolidays(realFirstDate)) {
+  if (isEndDateInNewYearInterval(realFirstDate, 2)) {
     secondCannotEarlierContainer.style.display = "flex";
+    secondCannotEarlierContainer.classList.remove("alert-danger");
     newSecondRangeContainer.style.display = "none";
     secondCannotEarlier.textContent =
-      "第一次領藥日的" +
-      interval.value +
-      "天後為" +
-      endDate(firstDate.value == "" ? registerDate : firstDate, 2) +
+      "第二次預設領藥區間的最後一天" +
+      endDate(realFirstDate, 2) +
       "，介於春節期間，故第二次可提前至" +
       tenDaysBeforeNewYear +
       "領藥。";
-    if (secondDate.value == "" || secondDate.value >= tenDaysBeforeNewYear) {
-      secondCannotEarlierContainer.classList.remove("alert-danger");
+    if (
+      tenDaysBeforeNewYear <= secondDate.value &&
+      secondDate.value <= endDate(realFirstDate, 2)
+    ) {
+      newThirdRangeContainer.style.display = "none";
     }
   }
-  if (
-    afterIntervalInNewYearHolidays(secondDate) &&
-    dispenseNum.value > 2 &&
-    secondDate.value != ""
-  ) {
+  if (isEndDateInNewYearInterval(realFirstDate, 3)) {
     thirdCanEarlierContainer.style.display = "flex";
+    thirdCanEarlierContainer.classList.remove("alert-danger");
     newThirdRangeContainer.style.display = "none";
     thirdCanEarlier.textContent =
-      "第二次領藥日的" +
-      interval.value +
-      "天後為" +
-      endDate(secondDate, 2) +
+      "第三次預設領藥區間的最後一天" +
+      endDate(realFirstDate, 3) +
       "，介於春節期間，故第三次可提前至" +
       tenDaysBeforeNewYear +
       "領藥。";
-    if (thirdDate.value == "" || thirdDate.value >= tenDaysBeforeNewYear) {
-      thirdCanEarlierContainer.classList.remove("alert-danger");
-    }
-  }
-  if (
-    (afterIntervalInNewYearHolidays(secondDate) && dispenseNum.value < 3) ||
-    (afterIntervalInNewYearHolidays(thirdDate) && thirdDate.value != "")
-  ) {
-    let realLastDate = dispenseNum.value < 3 ? secondDate : thirdDate;
-    if (dispenseNum.value < 3) {
-      thirdCanEarlierContainer.style.display = "none";
-    }
-    newFollowupContainer.style.display = "flex";
-    newFollowup.textContent =
-      "最後一次領藥日的" +
-      interval.value +
-      "天後為" +
-      endDate(realLastDate, 2) +
-      "，介於春節期間，故可提前至" +
-      tenDaysBeforeNewYear +
-      "回診領藥。";
-    newFollowupContainer.classList.remove("alert-danger");
   }
 }
 
