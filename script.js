@@ -117,7 +117,7 @@ function calcDefaults() {
   defaultThirdRange.textContent =
     startDate(registerDate, 3) + " ~ " + endDate(registerDate, 3);
   expireDate.textContent = moment(registerDate.value)
-    .add(interval.value * dispenseNum.value, "d")
+    .add(interval.value * dispenseNum.value - 1, "d")
     .format("YYYY-MM-DD");
 }
 
