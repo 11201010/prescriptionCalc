@@ -6,12 +6,12 @@ let firstDate = document.getElementById("firstDate");
 let defaultSecondRange = document.getElementById("defaultSecondRange");
 let newSecondRange = document.getElementById("newSecondRange");
 let newSecondRangeContainer = document.getElementById(
-  "newSecondRangeContainer"
+  "newSecondRangeContainer",
 );
 let secondDate = document.getElementById("secondDate");
 let secondCannotEarlier = document.getElementById("secondCannotEarlier");
 let secondCannotEarlierContainer = document.getElementById(
-  "secondCannotEarlierContainer"
+  "secondCannotEarlierContainer",
 );
 let defaultThirdRange = document.getElementById("defaultThirdRange");
 let newThirdRange = document.getElementById("newThirdRange");
@@ -19,7 +19,7 @@ let newThirdRangeContainer = document.getElementById("newThirdRangeContainer");
 let thirdDate = document.getElementById("thirdDate");
 let thirdCanEarlier = document.getElementById("thirdCanEarlier");
 let thirdCanEarlierContainer = document.getElementById(
-  "thirdCanEarlierContainer"
+  "thirdCanEarlierContainer",
 );
 let followupDate = document.getElementById("followupDate");
 let newFollowup = document.getElementById("newFollowup");
@@ -161,8 +161,8 @@ function calcNewThirdRange() {
   newThirdRange.textContent = dateInInterval(secondDate, 2)
     ? "第三次領藥區間維持不變"
     : startDate(secondDate, 2) <= endDate(registerDate, 3)
-    ? startDate(secondDate, 2) + " ~ " + endDate(registerDate, 3)
-    : startDate(secondDate, 2);
+      ? startDate(secondDate, 2) + " ~ " + endDate(registerDate, 3)
+      : startDate(secondDate, 2);
 }
 
 function setNewThirdDisplay() {
@@ -244,10 +244,11 @@ function checkNewFollowup() {
   }
 }
 
-const newYearStartDate = "2025-01-25";
-const newYearEndDate = "2025-02-02";
-const tenDaysBeforeNewYear = moment(newYearStartDate)
-  .subtract(10, "d")
+const newYearStartDate = "2026-02-14";
+const newYearEndDate = "2026-02-22";
+const newYearEarlyDays = 14;
+const newYearEarlyStartDate = moment(newYearStartDate)
+  .subtract(newYearEarlyDays, "d")
   .format("YYYY-MM-DD");
 
 newYearAnnouncement.textContent =
@@ -259,8 +260,10 @@ newYearAnnouncement.textContent =
   "止，共" +
   moment(newYearEndDate).add(1, "d").diff(moment(newYearStartDate), "d") +
   "天。" +
-  "考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前10天，即" +
-  tenDaysBeforeNewYear.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
+  "考量民眾回診需要及避免用藥中斷，對於原本預定於春節假期期間回診之民眾，或連續處方箋之迄日介於春節期間者，可提前自春節前" +
+  newYearEarlyDays +
+  "天，即" +
+  newYearEarlyStartDate.replace(/(\d+)\-(\d+)\-(\d+)/, "$1年$2月$3日") +
   "(含)起回診或預領下個月(次)用藥。";
 
 function isEndDateInNewYearInterval(date, n) {
@@ -283,10 +286,10 @@ function checkBeforeNewYear() {
       "第二次預設領藥區間的最後一天" +
       endDate(realFirstDate, 2) +
       "，介於春節期間，故第二次可提前至" +
-      tenDaysBeforeNewYear +
+      newYearEarlyStartDate +
       "領藥。";
     if (
-      tenDaysBeforeNewYear <= secondDate.value &&
+      newYearEarlyStartDate <= secondDate.value &&
       secondDate.value <= endDate(realFirstDate, 2)
     ) {
       newThirdRangeContainer.style.display = "none";
@@ -300,7 +303,7 @@ function checkBeforeNewYear() {
       "第三次預設領藥區間的最後一天" +
       endDate(realFirstDate, 3) +
       "，介於春節期間，故第三次可提前至" +
-      tenDaysBeforeNewYear +
+      newYearEarlyStartDate +
       "領藥。";
   }
 }
